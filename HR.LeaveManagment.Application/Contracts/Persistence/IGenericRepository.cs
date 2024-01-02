@@ -1,12 +1,12 @@
 ﻿namespace HR.LeaveManagement.Application.Contracts.Persistence
 {
-    internal interface IGenericRepository<T> where T : class
+    public interface IGenericRepository<T> where T : class
     {
         Task<T> CreateAsync(T entity);
 
         Task<T> DeleteAsync(T entity);
 
-        Task<T> GetAsync();
+        Task<List<T>> GetAsync();
 
         Task<T> GetByIdAsync(int id);
 
