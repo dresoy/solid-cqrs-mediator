@@ -2,5 +2,5 @@
 
 namespace HR.LeaveManagement.Application.Features.LeaveType.Queries.GetAllLeaveTypes
 {
-    public interface GetLeaveTypesQuery : IRequest<List<LeaveTypeDto>>;
+    public interface IGetLeaveTypesQuery : IRequest<List<LeaveTypeDto>>;
 }
