@@ -1,0 +1,14 @@
+﻿using HR.LeaveManagement.Domain;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace HR.LeaveManagement.Persistence.Configurations
+{
+    public class LeaveRequestConfiguration : IEntityTypeConfiguration<LeaveRequest>
+    {
+        public void Configure(EntityTypeBuilder<LeaveRequest> builder)
+        {
+            builder.Property(q => q.RequestingEmployeeId).IsRequired();
+        }
+    }
+}
