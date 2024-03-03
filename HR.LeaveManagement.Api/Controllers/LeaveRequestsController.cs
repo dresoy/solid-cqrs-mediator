@@ -29,7 +29,7 @@ namespace HR.LeaveManagement.Api.Controllers
             return Ok(leaveRequests);
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<ActionResult<LeaveRequestDetailsDto>> Get(int id)
         {
             var leaveRequest = await _mediator.Send(new GetLeaveRequestDetailsQuery(id));
