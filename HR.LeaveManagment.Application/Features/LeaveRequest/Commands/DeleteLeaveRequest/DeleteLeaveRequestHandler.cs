@@ -1,0 +1,31 @@
+﻿using AutoMapper;
+using HR.LeaveManagement.Application.Contracts.Persistence;
+using HR.LeaveManagement.Application.Exceptions;
+using MediatR;
+
+namespace HR.LeaveManagement.Application.Features.LeaveRequest.Commands.DeleteLeaveRequest
+{
+    public class DeleteLeaveRequestHandler : IRequestHandler<DeleteLeaveRequestCommand, Unit>
+    {
+
+        private readonly ILeaveRequestRepository _leaveRequestRepository;
+
+        public DeleteLeaveRequestHandler(ILeaveRequestRepository leaveRequestRepository)
+        {
+            _leaveRequestRepository = leaveRequestRepository ?? throw new ArgumentNullException(nameof(leaveRequestRepository));
+        }
+
+        public async Task<Unit> Handle(DeleteLeaveRequestCommand request, CancellationToken cancellationToken)
+        {
+            var leaveRequest = await _leaveRequestRepository.GetByIdAsync(request.Id);
+
+            if (leaveRequest == null)
+            {
+                throw new NotFoundException(nameof(leaveRequest), request.Id);
+            }
+
+            await _leaveRequestRepository.DeleteAsync(leaveRequest);
+            return Unit.Value;
+        }
+    }
+}
