@@ -24,11 +24,11 @@ namespace HR.LeaveManagement.Application.Features.LeaveAllocations.Commands.Crea
         public async Task<Unit> Handle(CreateLeaveAllocationCommand request, CancellationToken cancellationToken)
         {
             var validator = new CreateLeaveAllocationCommandValidator(_leaveTypeRepository);
-            var validationResults = await validator.ValidateAsync(request);
+            var validationResults = await validator.ValidateAsync(request, cancellationToken);
 
             if (validationResults.Errors.Any())
             {
-                throw new BadRequestException("Invalid Leave Allocation Request");
+                throw new BadRequestException("Invalid Leave Allocation Request", validationResults);
             }
 
             var leaveType = await _leaveTypeRepository.GetByIdAsync(request.LeaveTypeId);
