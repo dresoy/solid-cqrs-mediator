@@ -24,9 +24,9 @@ namespace HR.LeaveManagement.Application.Features.LeaveAllocations.Commands.Upda
         public async Task<Unit> Handle(UpdateLeaveAllocationCommand request, CancellationToken cancellationToken)
         {
             var validator = new UpdateLeaveAllocationCommandValidator(_leaveTypeRepository, _leaveAllocationRepository);
-            var validationResult = await validator.ValidateAsync(request);
+            var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
-            if (validationResult.Errors.Any())
+            if (validationResult.Errors.Count > 0)
             {
                 throw new BadRequestException("Invalid Leave Allocation", validationResult);
             }

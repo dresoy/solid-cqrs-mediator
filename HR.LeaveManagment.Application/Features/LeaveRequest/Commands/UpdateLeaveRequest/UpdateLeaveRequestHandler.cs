@@ -36,7 +36,7 @@ namespace HR.LeaveManagement.Application.Features.LeaveRequest.Commands.UpdateLe
             var leaveRequest = await _leaveRequestRepository.GetByIdAsync(request.Id) ?? throw new NotFoundException(nameof(Domain.LeaveRequest), request.Id);
 
             var validator = new UpdateLeaveRequestValidator(_leaveTypeRepository, _leaveRequestRepository);
-            var validationResult = await validator.ValidateAsync(request);
+            var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
             if (validationResult.Errors.Count > 0)
             {
@@ -47,12 +47,12 @@ namespace HR.LeaveManagement.Application.Features.LeaveRequest.Commands.UpdateLe
 
             await _leaveRequestRepository.UpdateAsync(leaveRequest);
 
-            SendEmail(request);
+            await SendEmail(request);
 
             return Unit.Value;
         }
 
-        private async void SendEmail(UpdateLeaveRequestCommand request)
+        private async Task SendEmail(UpdateLeaveRequestCommand request)
         {
             try
             {

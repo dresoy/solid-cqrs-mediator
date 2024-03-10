@@ -49,7 +49,6 @@ namespace HR.LeaveManagement.Api.Controllers
         }
 
         // PUT api/<LeaveAllocationsController>/5
-        [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

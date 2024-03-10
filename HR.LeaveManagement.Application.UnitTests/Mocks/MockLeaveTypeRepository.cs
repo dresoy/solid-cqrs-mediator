@@ -1,4 +1,5 @@
 ﻿using HR.LeaveManagement.Application.Contracts.Persistence;
+using HR.LeaveManagement.Application.UnitTests.Mocks.LeaveTypeMocks.Data;
 using HR.LeaveManagement.Domain;
 using Moq;
 
@@ -8,24 +9,7 @@ namespace HR.LeaveManagement.Application.UnitTests.Mocks
     {
         public static Mock<ILeaveTypeRepository> GetMockLeaveTypeRepository()
         {
-            var leaveTypes = new List<LeaveType> {
-                new LeaveType
-                {
-                    Id = 1, DefaultDays = 10,
-                    Name = "Test Vacation"
-                },
-                new LeaveType
-                {
-                    Id = 2, DefaultDays = 15,
-                    Name="Test Sick"
-                },
-                new LeaveType
-                {
-                    Id = 3,
-                    DefaultDays = 15,
-                    Name = "Test Maternity"
-                }
-            };
+            List<LeaveType> leaveTypes = LeaveTypeMockData.GetList();
 
             var mockRepo = new Mock<ILeaveTypeRepository>();
 
@@ -38,7 +22,16 @@ namespace HR.LeaveManagement.Application.UnitTests.Mocks
                     return leaveType;
                 });
 
+            SetUpLeaveTypeDetail(mockRepo);
+
             return mockRepo;
         }
+
+        private static void SetUpLeaveTypeDetail(Mock<ILeaveTypeRepository> mockRepo)
+        {
+            mockRepo.Setup(s => s.GetByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync((int id) => LeaveTypeMockData.GetList().Where(w => w.Id == id).First());
+        }
+
     }
 }

@@ -36,12 +36,12 @@ namespace HR.LeaveManagement.Application.Features.LeaveRequest.Commands.CancelLe
 
             // Re-evaluate the employee's allocations for the leave type
 
-            SendEmail(leaveRequest);
+            await SendEmail(leaveRequest);
 
             return Unit.Value;
         }
 
-        private async void SendEmail(Domain.LeaveRequest request)
+        private async Task SendEmail(Domain.LeaveRequest request)
         {
             try
             {

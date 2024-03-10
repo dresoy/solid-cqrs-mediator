@@ -51,12 +51,12 @@ namespace HR.LeaveManagement.Application.Features.LeaveRequest.Commands.CreateLe
             var leaveRequest = _mapper.Map<Domain.LeaveRequest>(request);
             await _leaveRequestRepository.CreateAsync(leaveRequest);
 
-            SendEmail(request);
+            await SendEmail(request);
 
             return Unit.Value;
         }
 
-        private async void SendEmail(CreateLeaveRequestCommand request)
+        private async Task SendEmail(CreateLeaveRequestCommand request)
         {
             try
             {

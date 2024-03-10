@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using FluentValidation;
-using HR.LeaveManagement.Application.Contracts.Email;
+﻿using HR.LeaveManagement.Application.Contracts.Email;
 using HR.LeaveManagement.Application.Contracts.Logging;
 using HR.LeaveManagement.Application.Contracts.Persistence;
 using HR.LeaveManagement.Application.Exceptions;
@@ -15,19 +13,16 @@ namespace HR.LeaveManagement.Application.Features.LeaveRequest.Commands.ChangeLe
 
 
         private readonly ILeaveRequestRepository _leaveRequestRepository;
-        private readonly ILeaveTypeRepository _leaveTypeRepository;
         private readonly IEmailSender _emailSender;
         private readonly IAppLogger<UpdateLeaveRequestHandler> _appLogger;
 
         public ChangeLeaveRequestApprovalHandler(
             ILeaveRequestRepository leaveRequestRepository,
-            ILeaveTypeRepository leaveTypeRepository,
             IEmailSender emailSender,
             IAppLogger<UpdateLeaveRequestHandler> appLogger
             )
         {
             _leaveRequestRepository = leaveRequestRepository ?? throw new ArgumentNullException(nameof(leaveRequestRepository));
-            _leaveTypeRepository = leaveTypeRepository ?? throw new ArgumentNullException(nameof(leaveTypeRepository));
             _emailSender = emailSender ?? throw new ArgumentNullException(nameof(emailSender));
             _appLogger = appLogger ?? throw new ArgumentNullException(nameof(appLogger));
         }
@@ -37,7 +32,7 @@ namespace HR.LeaveManagement.Application.Features.LeaveRequest.Commands.ChangeLe
             var leaveRequest = await _leaveRequestRepository.GetByIdAsync(request.Id) ?? throw new NotFoundException(nameof(Domain.LeaveRequest), request.Id);
 
             var validator = new ChangeLeaveRequestApprovalValidator();
-            var validationResult = await validator.ValidateAsync(request);
+            var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
             if (validationResult.Errors.Count > 0)
             {
@@ -50,12 +45,12 @@ namespace HR.LeaveManagement.Application.Features.LeaveRequest.Commands.ChangeLe
 
             // if the request is approved, gets and updates the employee's allocations
 
-            SendEmail(leaveRequest);
+            await SendEmail(leaveRequest);
 
             return Unit.Value;
         }
 
-        private async void SendEmail(Domain.LeaveRequest request)
+        private async Task SendEmail(Domain.LeaveRequest request)
         {
             try
             {
